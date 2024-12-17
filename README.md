@@ -49,3 +49,21 @@ Make sure to replace `8080` with the actual port number if your application runs
 To run the tests, use the following command:
 ```sh
 ./gradlew test
+```
+
+## What's next?
+### features :
+   - include feature to react to a post or comment (like/dislike)
+   - include feature to delete or edit a post
+
+### performance
+    - include caching to improve performance (post would be a good candidate as they don't change often)
+
+### security
+   - include access control to restrict access to certain endpoints
+   - api gateway to manage access to the api
+
+### monitoring
+   - include monitoring to track the performance of the api
+   - increase logging to track the usage of the api
+   - include alerting to notify when the api is down
