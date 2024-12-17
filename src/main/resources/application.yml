@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: blogpost
+  datasource:
+    url: jdbc:h2:mem:blogpost;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+logging:
+  level:
+    org:
+      flywaydb: debug
