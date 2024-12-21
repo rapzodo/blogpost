@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,7 +33,7 @@ public class CommentControllerRestAssuredTest {
 
     @Test
     public void shouldUpdateComment() {
-        Comment comment = commentRepository.save(new Comment("Comment"));
+        Comment comment = commentRepository.save(new Comment("Comment", null));
 
         CommentRequest expectedComment = new CommentRequest("Updated Comment");
 
@@ -42,14 +43,16 @@ public class CommentControllerRestAssuredTest {
                 .when()
                 .put("/api/v1/comments/" + comment.getId())
                 .then()
+                .log().body()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON)
-                .body("content", equalTo(expectedComment.content()));
+                .body("content", equalTo(expectedComment.content()))
+                .body("updatedAt", notNullValue());
     }
 
     @Test
     public void shouldDeleteComment() {
-        Comment comment = commentRepository.save(new Comment("Comment"));
+        Comment comment = commentRepository.save(new Comment("Comment", null));
 
         given()
                 .when()

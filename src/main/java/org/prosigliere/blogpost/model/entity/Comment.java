@@ -25,12 +25,22 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(String content) {
+    public Comment(String content, BlogPost post) {
         if (content == null || content.isBlank()) {
             throw new IllegalArgumentException("Content cannot be null or empty");
         }
         this.content = content;
-        this.createdAt = LocalDateTime.now();
+        this.blogPost = post;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 
     public CommentResponse toCommentResponse() {

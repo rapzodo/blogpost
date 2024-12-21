@@ -3,6 +3,7 @@ package org.prosigliere.blogpost.service;
 import jakarta.transaction.Transactional;
 import org.prosigliere.blogpost.exception.RecordNotFoundException;
 import org.prosigliere.blogpost.model.entity.BlogPost;
+import org.prosigliere.blogpost.model.entity.Comment;
 import org.prosigliere.blogpost.repository.BlogPostRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +44,10 @@ public class BlogPostService {
     }
 
     @Transactional
-    public BlogPost updatePost(BlogPost post) {
-        logger.info("updating post: {}", post);
+    public BlogPost addComment(Long id, String commentContent) throws RecordNotFoundException {
+        logger.info("adding comment {} to post{}", commentContent, id);
+        BlogPost post = findPostById(id);
+        post.getComments().add(new Comment(commentContent, post));
         return blogPostRepository.save(post);
     }
 }

@@ -57,6 +57,7 @@ class CommentServiceIntegrationTest {
 
         Comment updatedComment = commentRepository.findById(comment.getId()).orElse(null);
         assertNotNull(updatedComment);
+        assertNotNull(updatedComment.getUpdatedAt());
         assertEquals("Updated Content", updatedComment.getContent());
     }
 

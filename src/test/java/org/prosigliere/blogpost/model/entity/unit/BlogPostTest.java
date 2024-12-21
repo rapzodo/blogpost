@@ -14,11 +14,9 @@ class BlogPostTest {
     @Test
     public void shouldMapToBlogPostResponse() {
         // given
-        BlogPost blogPost = new BlogPost();
+        BlogPost blogPost = new BlogPost("Test Title", "Test Content");
         blogPost.setId(1L);
-        blogPost.setTitle("Test Title");
-        blogPost.setContent("Test Content");
-        blogPost.setComments(Stream.of(new Comment("some content")).toList());
+        blogPost.setComments(Stream.of(new Comment("some content", blogPost)).toList());
 
         // when
         BlogPostResponse response = blogPost.toBlogPostResponse();

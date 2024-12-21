@@ -37,16 +37,16 @@ public class BlogPostServiceIntegrationTest {
     }
 
     @Test
-    public void testFindAllPosts() {
+    public void shouldFindAllPosts() {
         BlogPost expectedPost = new BlogPost("Test Title", "Test Content");
         blogPostService.createPost(expectedPost);
         List<BlogPost> posts = blogPostService.findAllPosts();
-        assertEquals(1,posts.size());
-        assertEquals(expectedPost.getTitle(),posts.getFirst().getTitle());
+        assertEquals(1, posts.size());
+        assertEquals(expectedPost.getTitle(), posts.getFirst().getTitle());
     }
 
     @Test
-    public void testCreatePost() {
+    public void shouldCreatePost() {
         BlogPost post = new BlogPost();
         post.setTitle("Test Title");
         post.setContent("Test Content");
@@ -74,10 +74,8 @@ public class BlogPostServiceIntegrationTest {
     }
 
     @Test
-    public void testDeletePost() {
-        BlogPost post = new BlogPost();
-        post.setTitle("Test Title");
-        post.setContent("Test Content");
+    public void shouldDeletePost() {
+        BlogPost post = new BlogPost("Test Title", "Test Content");
 
         BlogPost createdPost = blogPostService.createPost(post);
         blogPostService.deletePost(createdPost.getId());
@@ -87,17 +85,15 @@ public class BlogPostServiceIntegrationTest {
     }
 
     @Test
-    public void testUpdatePost() {
-        BlogPost post = new BlogPost();
-        post.setTitle("Test Title");
-        post.setContent("Test Content");
+    public void shouldAddComment() throws RecordNotFoundException {
+        BlogPost expectedPost = new BlogPost("Test Title", "Test Content");
+        expectedPost = blogPostService.createPost(expectedPost);
 
-        BlogPost createdPost = blogPostService.createPost(post);
-        createdPost.setTitle("Updated Title");
-
-        BlogPost updatedPost = blogPostService.updatePost(createdPost);
+        BlogPost updatedPost = blogPostService.addComment(expectedPost.getId(), "Test Comment");
         assertNotNull(updatedPost);
-        assertEquals("Updated Title", updatedPost.getTitle());
+        assertEquals(1, updatedPost.getComments().size());
+        assertEquals(expectedPost.getTitle(), updatedPost.getTitle());
+        assertEquals(expectedPost.getContent(), updatedPost.getContent());
     }
 
 }

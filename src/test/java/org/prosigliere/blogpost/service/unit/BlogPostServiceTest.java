@@ -7,17 +7,24 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prosigliere.blogpost.exception.RecordNotFoundException;
 import org.prosigliere.blogpost.model.entity.BlogPost;
+import org.prosigliere.blogpost.model.entity.Comment;
 import org.prosigliere.blogpost.repository.BlogPostRepository;
 import org.prosigliere.blogpost.service.BlogPostService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class BlogPostServiceTest {
 
@@ -84,14 +91,18 @@ class BlogPostServiceTest {
     }
 
     @Test
-    void shouldSaveAndReturnUpdatedPost() {
+    void shouldSaveAndReturnUpdatedPost() throws RecordNotFoundException {
         {
             BlogPost post = new BlogPost();
+            post.setComments(Stream.of(new Comment(), new Comment())
+                    .collect(Collectors.toCollection(ArrayList::new)));
+            when(blogPostRepository.findById(post.getId())).thenReturn(Optional.of(post));
             when(blogPostRepository.save(post)).thenReturn(post);
 
-            BlogPost result = blogPostService.updatePost(post);
+            BlogPost result = blogPostService.addComment(post.getId(), "Test Comment");
 
             assertNotNull(result);
+            assertEquals(3, result.getComments().size());
             verify(blogPostRepository, times(1)).save(post);
         }
     }
