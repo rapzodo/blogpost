@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.prosigliere.blogpost.exception.InvalidCommentException;
 import org.prosigliere.blogpost.exception.RecordNotFoundException;
 import org.prosigliere.blogpost.model.entity.BlogPost;
 import org.prosigliere.blogpost.repository.BlogPostRepository;
@@ -85,7 +86,7 @@ public class BlogPostServiceIntegrationTest {
     }
 
     @Test
-    public void shouldAddComment() throws RecordNotFoundException {
+    public void shouldAddComment() throws RecordNotFoundException, InvalidCommentException {
         BlogPost expectedPost = new BlogPost("Test Title", "Test Content");
         expectedPost = blogPostService.createPost(expectedPost);
 

@@ -1,5 +1,6 @@
 package org.prosigliere.blogpost.controller;
 
+import org.prosigliere.blogpost.exception.InvalidCommentException;
 import org.prosigliere.blogpost.exception.RecordNotFoundException;
 import org.prosigliere.blogpost.model.entity.BlogPost;
 import org.prosigliere.blogpost.model.record.BlogPostRequest;
@@ -39,7 +40,7 @@ public class BlogPostController {
     }
 
     @PutMapping("/{id}/comments")
-    public BlogPostResponse addComment(@PathVariable Long id, @RequestBody CommentRequest commentRequest) throws RecordNotFoundException {
+    public BlogPostResponse addComment(@PathVariable Long id, @RequestBody CommentRequest commentRequest) throws RecordNotFoundException, InvalidCommentException {
         return blogPostService.addComment(id, commentRequest.content()).toBlogPostResponse();
     }
 }

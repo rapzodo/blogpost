@@ -1,6 +1,7 @@
 package org.prosigliere.blogpost.service;
 
 import jakarta.transaction.Transactional;
+import org.prosigliere.blogpost.exception.InvalidCommentException;
 import org.prosigliere.blogpost.exception.RecordNotFoundException;
 import org.prosigliere.blogpost.model.entity.BlogPost;
 import org.prosigliere.blogpost.model.entity.Comment;
@@ -14,6 +15,7 @@ import java.util.List;
 @Service
 public class BlogPostService {
 
+    private static final int MAX_LENGTH = 255;
     private final BlogPostRepository blogPostRepository;
     private static final Logger logger = LoggerFactory.getLogger(BlogPostService.class);
 
@@ -44,10 +46,13 @@ public class BlogPostService {
     }
 
     @Transactional
-    public BlogPost addComment(Long id, String commentContent) throws RecordNotFoundException {
+    public BlogPost addComment(Long id, String commentContent) throws RecordNotFoundException, InvalidCommentException {
         logger.info("adding comment {} to post{}", commentContent, id);
+        if(commentContent == null || commentContent.isBlank() || commentContent.length() > MAX_LENGTH) {
+            throw new InvalidCommentException("Comment content cannot be empty or exceed 255 characters");
+        }
         BlogPost post = findPostById(id);
-        post.getComments().add(new Comment(commentContent, post));
+        post.addComment(new Comment(commentContent, post));
         return blogPostRepository.save(post);
     }
 }

@@ -13,6 +13,8 @@ public class BlogPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Version
+    private Long version;
     @NotNull(message = "Title cannot be null or empty")
     private String title;
     @NotNull(message = "Content cannot be null or empty")
@@ -63,5 +65,17 @@ public class BlogPost {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
+
+    Long getVersion(){
+        return version;
+    }
+
+    void setVersion(Long version){
+        this.version = version;
     }
 }

@@ -10,6 +10,7 @@ import org.prosigliere.blogpost.repository.CommentRepository;
 import org.prosigliere.blogpost.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
+@DirtiesContext
 class CommentServiceIntegrationTest {
 
     @Autowired
@@ -30,6 +32,9 @@ class CommentServiceIntegrationTest {
     @Autowired
     private CommentRepository commentRepository;
 
+//    @PersistenceContext
+//    private EntityManager entityManager;
+
     @BeforeEach
     public void setUp() {
         commentRepository.deleteAll();
@@ -37,9 +42,7 @@ class CommentServiceIntegrationTest {
 
     @Test
     void shouldFindCommentById() throws RecordNotFoundException {
-        Comment comment = new Comment();
-        comment.setContent("Test Content");
-        commentRepository.save(comment);
+        Comment comment = createSomeComment();
 
         Comment foundComment = commentService.findCommentById(comment.getId());
         assertNotNull(foundComment);
@@ -47,25 +50,28 @@ class CommentServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     void shouldUpdateComment() {
-        Comment comment = new Comment();
-        comment.setContent("Test Content");
-        commentRepository.save(comment);
+        Comment comment = createSomeComment();
 
         comment.setContent("Updated Content");
         commentService.updateComment(comment);
+        commentRepository.flush();
+        assertNotNull(comment);
+        assertEquals("Updated Content", comment.getContent());
+        assertNotNull(comment.getUpdatedAt());
+    }
 
-        Comment updatedComment = commentRepository.findById(comment.getId()).orElse(null);
-        assertNotNull(updatedComment);
-        assertNotNull(updatedComment.getUpdatedAt());
-        assertEquals("Updated Content", updatedComment.getContent());
+    private Comment createSomeComment() {
+        Comment comment = new Comment();
+        comment.setContent("Test Content");
+        commentRepository.save(comment);
+        return comment;
     }
 
     @Test
     void shouldDeleteComment() {
-        Comment comment = new Comment();
-        comment.setContent("Test Content");
-        commentRepository.save(comment);
+        Comment comment = createSomeComment();
 
         commentService.deleteComment(comment.getId());
 

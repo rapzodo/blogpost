@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prosigliere.blogpost.exception.InvalidCommentException;
 import org.prosigliere.blogpost.exception.RecordNotFoundException;
 import org.prosigliere.blogpost.model.entity.BlogPost;
 import org.prosigliere.blogpost.model.entity.Comment;
@@ -91,7 +92,7 @@ class BlogPostServiceTest {
     }
 
     @Test
-    void shouldSaveAndReturnUpdatedPost() throws RecordNotFoundException {
+    void shouldAddCommentToPost() throws RecordNotFoundException, InvalidCommentException {
         {
             BlogPost post = new BlogPost();
             post.setComments(Stream.of(new Comment(), new Comment())
@@ -105,5 +106,41 @@ class BlogPostServiceTest {
             assertEquals(3, result.getComments().size());
             verify(blogPostRepository, times(1)).save(post);
         }
+    }
+
+    @Test
+    void shouldThrowExceptionWhenPostDoesNotExist() {
+        when(blogPostRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(RecordNotFoundException.class, () -> blogPostService.addComment(1L, "Test Comment"));
+        verify(blogPostRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void shouldAddMultipleComments() throws RecordNotFoundException, InvalidCommentException {
+        BlogPost post = new BlogPost();
+        post.setComments(Stream.of(new Comment(), new Comment())
+                .collect(Collectors.toCollection(ArrayList::new)));
+        when(blogPostRepository.findById(post.getId())).thenReturn(Optional.of(post));
+        when(blogPostRepository.save(post)).thenReturn(post);
+
+        blogPostService.addComment(post.getId(), "Test Comment 1");
+        blogPostService.addComment(post.getId(), "Test Comment 2");
+
+        assertNotNull(post);
+        assertEquals(4, post.getComments().size());
+        verify(blogPostRepository, times(2)).save(post);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCommentContentIsInvalid() {
+        BlogPost post = new BlogPost();
+        post.setComments(Stream.of(new Comment(), new Comment())
+                .collect(Collectors.toCollection(ArrayList::new)));
+        when(blogPostRepository.findById(post.getId())).thenReturn(Optional.of(post));
+
+        assertThrows(InvalidCommentException.class, () -> blogPostService.addComment(post.getId(), null));
+        assertThrows(InvalidCommentException.class, () -> blogPostService.addComment(post.getId(), ""));
+        assertThrows(InvalidCommentException.class, () -> blogPostService.addComment(post.getId(), "a".repeat(256)));
     }
 }
