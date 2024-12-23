@@ -11,6 +11,7 @@ import org.prosigliere.blogpost.repository.BlogPostRepository;
 import org.prosigliere.blogpost.service.BlogPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
+@DirtiesContext
 public class BlogPostServiceIntegrationTest {
 
     @Autowired

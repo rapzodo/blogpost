@@ -32,9 +32,6 @@ class CommentServiceIntegrationTest {
     @Autowired
     private CommentRepository commentRepository;
 
-//    @PersistenceContext
-//    private EntityManager entityManager;
-
     @BeforeEach
     public void setUp() {
         commentRepository.deleteAll();
