@@ -18,11 +18,12 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-#  review:
   run-on-comment:
     if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '@danilo-ai') }}
     runs-on: ubuntu-latest
     steps:
+      - name: Add Eyes Icon
+        run: echo "👀 Action triggered!"
       - name: Checkout code
         uses: actions/checkout@v3
 
