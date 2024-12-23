@@ -19,7 +19,7 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   run-on-comment:
-    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '@danilo-ai') }}
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '@Danilo-ai') }}
     runs-on: ubuntu-latest
     steps:
       - name: Add Eyes Icon
