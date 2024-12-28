@@ -26,9 +26,6 @@ public class Comment {
     }
 
     public Comment(String content, BlogPost post) {
-        if (content == null || content.isBlank()) {
-            throw new IllegalArgumentException("Content cannot be null or empty");
-        }
         this.content = content;
         this.blogPost = post;
     }

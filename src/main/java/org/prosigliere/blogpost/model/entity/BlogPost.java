@@ -1,5 +1,6 @@
 package org.prosigliere.blogpost.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.prosigliere.blogpost.model.record.BlogPostResponse;
@@ -20,6 +21,7 @@ public class BlogPost {
     @NotNull(message = "Content cannot be null or empty")
     private String content;
     @OneToMany(mappedBy = "blogPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
     public BlogPost() {

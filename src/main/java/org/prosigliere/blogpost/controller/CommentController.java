@@ -6,8 +6,8 @@ import org.prosigliere.blogpost.model.record.CommentRequest;
 import org.prosigliere.blogpost.model.record.CommentResponse;
 import org.prosigliere.blogpost.service.CommentService;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +27,7 @@ public class CommentController {
         commentService.deleteComment(id);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public CommentResponse updateComment(@PathVariable Long id, @RequestBody CommentRequest commentRequest) throws RecordNotFoundException {
         // update comment
         Comment comment = commentService.findCommentById(id);
