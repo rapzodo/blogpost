@@ -1,0 +1,46 @@
+name: AI Code Review
+
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  run-on-comment:
+    if: ${{ github.event.name == 'issue_comment' && contains(github.event.comment.body, '@Danilo-ai') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add Eyes Icon
+        run: echo "👀 Action triggered!"
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run AI Code Review
+        env:
+           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+           GITHUB_REPOSITORY: ${{ github.repository }}
+           GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+           python review.py
+
