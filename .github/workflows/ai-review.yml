@@ -40,7 +40,8 @@ jobs:
            OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
            GITHUB_REPOSITORY: ${{ github.repository }}
-           GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
+           GITHUB_PR_NUMBER: ${{ github.event.issue.pull_request.number || 'No PR' }}
         run: |
            python review.py
-
+      - name: debug
+        run: { echo "Event Payload: "${{ toJson(github.event) }}" }
