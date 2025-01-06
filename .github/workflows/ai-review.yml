@@ -53,9 +53,17 @@ jobs:
   run-on-comment:
     if: ${{ github.event.name == 'issue_comment' && github.event.issue.pull_request != null && contains(github.event.comment.body, '@go') }}
     needs: setup
-    uses: ./.github/workflows/ai-review.yml#review
+    steps:
+        - name: setup
+          uses: ./.github/workflows/ai-review.yml#setup
+        - name: review
+          uses: ./.github/workflows/ai-review.yml#review
 
   first-review:
     if: ${{ github.event_name == 'pull_request' && github.event.action == 'opened' }}
     needs: setup
-    uses: ./.github/workflows/ai-review.yml#review
+    steps:
+      - name: setup
+        uses: ./.github/workflows/ai-review.yml#setup
+      - name: review
+        uses: ./.github/workflows/ai-review.yml#review
