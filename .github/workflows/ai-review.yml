@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add Eyes Icon
-      - run: echo "👀 Action triggered!"
+        run: echo "👀 Action triggered!"
       - name: Run AI Code Review
         env:
            OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
