@@ -32,7 +32,7 @@ jobs:
           pip install -r requirements.txt
 
   review:
-#    if: ${{ github.event.name == 'issue_comment' && github.event.issue.pull_request != null && contains(github.event.comment.body, '@go') || github.event_name == 'pull_request' && github.event.action == 'opened'}}
+    if: ${{ github.event.name == 'issue_comment' && contains(github.event.comment.body, '@go') || (github.event_name == 'pull_request' && github.event.action == 'opened')}}
     needs: setup
     runs-on: ubuntu-latest
     steps:
